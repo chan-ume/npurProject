@@ -2,6 +2,7 @@
 #install.packages("dplyr", dependencies=T)
 #install.packages("jsonlite", dependencies=T)
 #install.packages("stringr", dependencies=T)
+#install.packages("wle", dependencies=T)
 
 library(rvest)
 library(dplyr)
@@ -50,15 +51,6 @@ dataForLinearRegression[,"年齢"] = gsub("歳","",dataForLinearRegression[,"年
 dataForLinearRegression[,"年俸"] = gsub("万円（推定）","",dataForLinearRegression[,"年俸"])
 dataForLinearRegression[,"年俸"] = gsub(",","",dataForLinearRegression[,"年俸"])
 
-dataForLinearRegression[,3:ncol(dataForLinearRegression)] = 
-
-data = as.data.frame(dataForLinearRegression)
-result = lm(data[,4]~data[,-4],data=data)	
-
-y = data[,4]
-x = data[,-4]
-
-lm(y~x)
 data = c()
 for (i in 3:ncol(dataForLinearRegression)){
   data = cbind(data, as.numeric(dataForLinearRegression[,i]))
@@ -66,6 +58,5 @@ for (i in 3:ncol(dataForLinearRegression)){
 colnames(data) = c("年齢","年俸","試合","打席数","打数","得点","安打","二塁打","三塁打","本塁打","塁打","打点","盗塁","盗塁刺","犠打","犠飛","四球","死球","三振","併殺打","打率","長打率","出塁率","OPS")
 Y = data[,2]
 X = data[,-2]
-Category = as.factor(dataForLinearRegression[,1:2])
 
 result = lm(Y~X+as.factor(dataForLinearRegression[,1])+as.factor(dataForLinearRegression[,2]))	
