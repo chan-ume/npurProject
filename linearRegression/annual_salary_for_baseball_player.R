@@ -227,18 +227,17 @@ resultP = lm(Yp ~ Xp+as.factor(dataForLinearRegressionP[,1]))
 # 対数正規分布を仮定して一般化線形回帰（GLM）
 resultPglm = glm(Yp ~ Xp+as.factor(dataForLinearRegressionP[,1]),family = gaussian(link = "log"))
 
-# 残差（推定値との差）を取得
-residualsH = residuals(resultH)
-residualsP = residuals(resultP)
-
-# それぞれの残差に選手名を付け加える
-residualsPWithName = cbind(PplayerInformationAndRecordAll[,1], residualsP)
-residualsHWithName = cbind(HplayerInformationAndRecordAll[,1], residualsH)
-# 昇順に並べる
+# 残差（推定値との差）を取得して、選手名を付け加える
+# その後昇順に並べる
 # 推定値との差を取った時に，小さい順からならべたもの
 # 前半は，推定値（本来このぐらいもらっているだろう値）よりも低い人が並ぶ，つまり「もっと貰って良い人」
 # 後半は，推定値（本来このぐらいもらっているだろう値）よりも高い人が並ぶ，つまり「貰いすぎじゃない？な人」
+residualsP = residuals(resultP)
+residualsPWithName = cbind(PplayerInformationAndRecordAll[,1], residualsP)
 orderedResidualsPWithName = residualsPWithName[order(residualsPWithName[,2]),]
+
+residualsH = residuals(resultH)
+residualsHWithName = cbind(HplayerInformationAndRecordAll[,1], residualsH)
 orderedResidualsHWithName = residualsHWithName[order(residualsHWithName[,2]),]
 
 # 一般化線形回帰（GLM）をした場合の残差を取得
