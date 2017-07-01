@@ -1,1 +1,2 @@
- plot(1:100,dbinom(1:100, 100, p=1/3),type="l",ylim=c(0,0.085),col=1) 
+plot(1:100,dbinom(1:100, 100, p=1/3),type="l",ylim=c(0,0.085),col=1) 
+plot(1:100,dbinom(1:100, 100, p=1/4),type="l",ylim=c(0,0.1),col=1) 
