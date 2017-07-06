@@ -17,7 +17,7 @@ recommendationInfoList = c()
 newOrOldInfoList = c()
 winCountInfoList = c()
 
-for (i in 1:numberOfPlace){
+for (i in 1:2){
   Sys.sleep(3)
   tmpHtml = read_html(paste("http://www.tokyo-np.co.jp", urlList[i], sep=""))
   tmpnameInfoList = tmpHtml %>% html_nodes(xpath = "//li[@class='name']") %>% html_text()
@@ -27,13 +27,13 @@ for (i in 1:numberOfPlace){
   tmpnewOrOldInfoList = tmpHtml %>% html_nodes(xpath = "//li[@class='sinkyu']")%>% html_text()
   tmpwinCountInfoList = tmpHtml %>% html_nodes(xpath = "//li[@class='kaisu']")%>% html_text()
 
-  nameInfoList = cbind(nameInfoList, tmpnameInfoList)
-  careerInfoList = cbind(careerInfoList, tmpcareerInfoList)
-  partyInfoList = cbind(partyInfoList, tmppartyInfoList)
-  recommendationInfoList = cbind(recommendationInfoList, tmprecommendationInfoList)
-  newOrOldInfoList = cbind(newOrOldInfoList, tmpnewOrOldInfoList)
-  winCountInfoList = cbind(winCountInfoList, tmpwinCountInfoList)
+  nameInfoList = c(nameInfoList, tmpnameInfoList)
+  careerInfoList = c(careerInfoList, tmpcareerInfoList)
+  partyInfoList = c(partyInfoList, tmppartyInfoList)
+  recommendationInfoList = c(recommendationInfoList, tmprecommendationInfoList)
+  newOrOldInfoList = c(newOrOldInfoList, tmpnewOrOldInfoList)
+  winCountInfoList = c(winCountInfoList, tmpwinCountInfoList)
 }
 
-candidateInfo = 
+candidateInfo = cbind(nameInfoList, careerInfoList, partyInfoList, recommendationInfoList, newOrOldInfoList, winCountInfoList)
 
