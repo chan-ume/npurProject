@@ -36,3 +36,4 @@ for (i in 1:numberOfPlace){
 }
 
 candidateInfo = cbind(nameInfoList, careerInfoList, partyInfoList, recommendationInfoList, newOrOldInfoList, winCountInfoList)
+candidateInfo = cbind(candidateInfo, str_match(candidateInfo[,1],".*（(.*)）$")[,2])
