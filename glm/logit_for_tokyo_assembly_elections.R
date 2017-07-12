@@ -78,6 +78,7 @@ urlForCandidateList = read_html("http://www.asahi.com/senkyo/togisen/2017/kaihyo
 nameList = c() 
 WinOrLoss = c()
 for(i in 1:length(urlForCandidateList)){
+  Sys.sleep(2)
   tmpUrl = paste("http://www.asahi.com",urlForCandidateList[i],sep="")
   tmpname = read_html(tmpUrl) %>% html_nodes(xpath="//table[@class='SnkTbl01']/tbody/tr/td[@class='Name']") %>% html_text()
   tmpWinOrLoss = read_html(tmpUrl) %>% html_nodes(xpath="//table[@class='SnkTbl01']/tbody/tr/td[@class='Rose']") %>% html_text()
@@ -85,3 +86,6 @@ for(i in 1:length(urlForCandidateList)){
   nameList = c(nameList, tmpname)
   WinOrLoss = c(WinOrLoss,tmpWinOrLoss)  
 }
+
+nameAndWinOrLoss = cbind(nameList,WinOrLoss)
+WinList = subset(nameAndWinOrLoss, nameAndWinOrLoss[,2]=="")[,1] %>% str_replace_all("　| ","")
