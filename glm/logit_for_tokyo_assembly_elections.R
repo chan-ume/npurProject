@@ -1,91 +1,77 @@
+## インストールがまだの場合は下記のコメントを外してそれぞれインストール
+#install.packages("rvest", dependencies=T)
+#install.packages("dplyr", dependencies=T)
+#install.packages("jsonlite", dependencies=T)
+#install.packages("stringr", dependencies=T)
+#install.packages("magrittr", dependencies=T)
+
+# ライブラリの読み込み
 library(rvest)
 library(dplyr)
 library(jsonlite)
 library(stringr)
 library(magrittr)
-library(data.table)
 
+## 候補者の属性データを取得
+
+# 対象サイトを読み込み
 basicUrl = read_html("http://www.tokyo-np.co.jp/senkyo/togisen2017/tod/tod_touha.html")
-urlList = basicUrl %>% html_nodes(xpath = "//ul[@class='clearfix']//a") %>% html_attr("href")
+# 選挙区別立候補者URLを取得
+candidateInfoUrlList = basicUrl %>% html_nodes(xpath = "//ul[@class='clearfix']//a") %>% html_attr("href")
 
-numberOfPlace = urlList %>% length
-
+# 属性データを格納するハコを用意
 nameInfoList = c()
-careerInfoList = c()
 partyInfoList = c()
-recommendationInfoList = c()
 newOrOldInfoList = c()
 winCountInfoList = c()
 
-for (i in 1:numberOfPlace){
+for (i in 1:(urlList %>% length)){
   Sys.sleep(3)
-  tmpHtml = read_html(paste("http://www.tokyo-np.co.jp", urlList[i], sep=""))
+  tmpHtml = read_html(paste("http://www.tokyo-np.co.jp", candidateInfoUrlList[i], sep=""))
   tmpnameInfoList = tmpHtml %>% html_nodes(xpath = "//li[@class='name']") %>% html_text()
-  tmpcareerInfoList = tmpHtml %>% html_nodes(xpath = "//li[@class='keireki']")%>% html_text()
   tmppartyInfoList = tmpHtml %>% html_nodes(xpath = "//li[@class='shozoku']")%>% html_text()
-  tmprecommendationInfoList = tmpHtml %>% html_nodes(xpath = "//li[@class='suisen']")%>% html_text()
   tmpnewOrOldInfoList = tmpHtml %>% html_nodes(xpath = "//li[@class='sinkyu']")%>% html_text()
   tmpwinCountInfoList = tmpHtml %>% html_nodes(xpath = "//li[@class='kaisu']")%>% html_text()
-
+  # 属性データをハコに追加
   nameInfoList = c(nameInfoList, tmpnameInfoList)
-  careerInfoList = c(careerInfoList, tmpcareerInfoList)
   partyInfoList = c(partyInfoList, tmppartyInfoList)
-  recommendationInfoList = c(recommendationInfoList, tmprecommendationInfoList)
   newOrOldInfoList = c(newOrOldInfoList, tmpnewOrOldInfoList)
   winCountInfoList = c(winCountInfoList, tmpwinCountInfoList)
 }
+# 取得した各属性データを一つにまとめる
+candidateInfo = cbind(nameInfoList, partyInfoList, newOrOldInfoList, winCountInfoList)
+# 年齢のデータを追加
+candidateInfo = cbind(0,candidateInfo, str_match(candidateInfo[,1],"(.*)（.*）$")[,2]%>% str_replace_all("　| ",""), str_match(candidateInfo[,1],".*（(.*)）$")[,2])
 
-candidateInfo = cbind(nameInfoList, careerInfoList, partyInfoList, recommendationInfoList, newOrOldInfoList, winCountInfoList)
-candidateInfo = cbind(candidateInfo, str_match(candidateInfo[,1],".*（(.*)）$")[,2])
+# 当選情報を取得する
+# 当選情報のURLリストを取得
+winningInfoUrlList = read_html("http://www.asahi.com/senkyo/togisen/2017/kaihyo/") %>% html_nodes(xpath = "//div[@id='SubLink2']/ul/li/a") %>% html_attr("href")
 
-urlForWinning = read_html("http://komatsudayohei.jp/seijitosyakaijosei/22055/")
-winningCandidateInfoDiv = urlForWinning %>% html_nodes(xpath = "/html[@class='col2']/body[@class='single single-post postid-22055 single-format-standard']/div[@class='container']/div[@class='main-body']/div[@class='main-body-in']/main/div[@class='main-conts']/article[@id='post-22055']/div[@class='section-in']/div[@class='article-body']/div[2]")
-
-str_match(winningCandidataInfo,"(.*)（.*\n")
-
-winningCandidataInfo = ""
-for (i in 2:13){
- p_i = paste("p[",i,"]", sep="") 
- tmp = winningCandidateInfoDiv %>% html_nodes(xpath=p_i) %>% html_text()
- winningCandidataInfo = paste(winningCandidataInfo,tmp)
-}
-
-str_match(winningCandidataInfo,"^(.*)（.*\n")
-
-b = str_split(winningCandidataInfo, "票|\n")[[1]] %>% str_match("^(.*)[：].*$") %>% na.omit()
-c = b[,2]
-d = str_split(c, "（")
-b = str_split(winningCandidataInfo, "票|\n")[[1]] %>% str_replace_all("　| ","")
-
-
-name_only = str_match(candidateInfo[,1],"^(.*)（.*")[,2] %>% str_replace_all("　| ","")
-
-winningList = c()
-for (i in 1:length(name_only)){
-  if(identical(grep(name_only[i],b),integer(0))){
-    winningOrLose = 0
-  }
-  else{
-    winningOrLose = 1
-  }
-  winningList = c(winningList,winningOrLose)
-}
-
-candidateInfo = cbind(candidateInfo,winningList)
-
-
-urlForCandidateList = read_html("http://www.asahi.com/senkyo/togisen/2017/kaihyo/") %>% html_nodes(xpath = "//div[@id='SubLink2']/ul/li/a") %>% html_attr("href")
+# 当選情報を格納するハコを用意
 nameList = c() 
 WinOrLoss = c()
-for(i in 1:length(urlForCandidateList)){
-  Sys.sleep(2)
-  tmpUrl = paste("http://www.asahi.com",urlForCandidateList[i],sep="")
+
+for(i in 1:length(winningInfoUrlList)){
+  Sys.sleep(3)
+  tmpUrl = paste("http://www.asahi.com",winningInfoUrlList[i],sep="")
   tmpname = read_html(tmpUrl) %>% html_nodes(xpath="//table[@class='SnkTbl01']/tbody/tr/td[@class='Name']") %>% html_text()
   tmpWinOrLoss = read_html(tmpUrl) %>% html_nodes(xpath="//table[@class='SnkTbl01']/tbody/tr/td[@class='Rose']") %>% html_text()
-
+ 
+   # 当選情報をハコに追加
   nameList = c(nameList, tmpname)
   WinOrLoss = c(WinOrLoss,tmpWinOrLoss)  
 }
-
+# 取得したデータを一つにまとめる
 nameAndWinOrLoss = cbind(nameList,WinOrLoss)
 WinList = subset(nameAndWinOrLoss, nameAndWinOrLoss[,2]=="")[,1] %>% str_replace_all("　| ","")
+
+# 当選リストに含まれる候補者データの1列目に'1'を代入する，落選者は'0'のまま
+candidateInfo[candidateInfo[,6] %in% WinList,1] = 1
+
+p = as.numeric(candidateInfo[,1])
+age = as.numeric(candidateInfo[,7])
+numberOfWinning = as.numeric(candidateInfo[,5])
+
+result = glm(p ~ age + numberOfWinning + candidateInfo[,3] + candidateInfo[,4], family=binomial(link="logit"))
+summary(result)
+step(result)
