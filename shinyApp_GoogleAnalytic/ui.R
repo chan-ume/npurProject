@@ -6,7 +6,7 @@ library(ggplot2)
 library(gridExtra)
 library(Rmisc)
 
-navbarPage("疑似query explorer",
+navbarPage("疑似Google Data Studio",
            tabPanel("Google アカウント連携", tabName = "setup", icon = icon("cogs"),
                     h1("Setup"),
                     googleAuthUI("Google_login"),
