@@ -3,6 +3,8 @@ library(googleAuthR)
 library(googleAnalyticsR)
 library(listviewer)
 library(ggplot2)
+library(gridExtra)
+library(Rmisc)
 
 options(shiny.port = 1221)
 options(googleAuthR.webapp.client_id = "")
