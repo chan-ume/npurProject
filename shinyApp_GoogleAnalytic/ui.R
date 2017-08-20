@@ -38,9 +38,6 @@ navbarPage("疑似query explorer",
                              br()
                       )
                     ),
-                    textOutput("text1"),
-                    textOutput("text2"),
-                    textOutput("text3"),
                     helpText("Calculated Metricsのところは適当なmetrics同士を計算させることができます"),
                     h2("表出力"),
                     actionButton("get_calc", "Calculated Metric dataを取得！", icon = icon("download"), class = "btn-success"),
