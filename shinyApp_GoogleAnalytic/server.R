@@ -54,18 +54,6 @@ shinyServer(function(input, output, session){
                dimensions = dims)
   })
   
-  output$text1 = renderText({
-    paste("メトリクスの数は", length(calc_met()))
-  })
-  
-  output$text2 = renderText({
-    paste("ディメンションの数は", length(calc_dim()))
-  })
-
-  output$text3 = renderText({
-    paste("calcメトリクスの数は", length(input$calculated_exp))
-  })
-  
   output$calc_table = renderDataTable({
     calc_data()
   })
