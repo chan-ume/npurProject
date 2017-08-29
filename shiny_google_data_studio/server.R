@@ -11,8 +11,8 @@ library(rJava)
 library(RColorBrewer)
 
 options(shiny.port = 1221)
-options(googleAuthR.webapp.client_id = "28672051596-s199hv99ngt3j69b3rslt6q6njd8kemh.apps.googleusercontent.com")
-options(googleAuthR.webapp.client_secret = "jXPWplOMBXhpUIMw0qZ1wkHD")
+options(googleAuthR.webapp.client_id = "")
+options(googleAuthR.webapp.client_secret = "")
 options(googleAuthR.scopes.selected = c("https://www.googleapis.com/auth/analytics.readonly"))
 
 shinyServer(function(input, output, session){
