@@ -63,14 +63,14 @@ tmp_data_frame = tmp_data_frame[,8:ncol(tmp_data_frame)]
 ############# decision tree ############# 
 #########################################
 train_sample = sample(nrow(tmp_data_frame), nrow(tmp_data_frame)*0.5)
-train.tmp_data_frame = tmp_data_frame[train_sample, ]
-test.tmp_data_frame = tmp_data_frame[-train_sample, ]
+train_tmp_data_frame = tmp_data_frame[train_sample, ]
+test_tmp_data_frame = tmp_data_frame[-train_sample, ]
 
-train.tmp_data_frame$type1 = as.factor(train.tmp_data_frame$type1)
-dt_model_2 = rpart(type1 ~ ., method="class", data=train.tmp_data_frame)
+train_tmp_data_frame$type1 = as.factor(train_tmp_data_frame$type1)
+dt_model_2 = rpart(type1 ~ ., method="class", data = train_tmp_data_frame)
 
-dt_model_predict = predict(dt_model_2, test.tmp_data_frame, type="class")
-dt_model_type = table(test.tmp_data_frame$type1, dt_model_predict)
+dt_model_predict = predict(dt_model_2, test_tmp_data_frame, type="class")
+dt_model_type = table(test_tmp_data_frame$type1, dt_model_predict)
 sum(diag(dt_model_type)) / sum(dt_model_type) 
 rpart.plot(dt_model_2, type = 4, extra=1)
 
