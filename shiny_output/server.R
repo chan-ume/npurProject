@@ -9,12 +9,6 @@ shinyServer(function(input, output) {
     iris
   })
   
-  #text
-  output$text <- renderPrint(
-    "text test >>%% \n
-    bbbb"
-  )
-  
   #table
   output$table <- renderTable({
     data()
@@ -29,12 +23,19 @@ shinyServer(function(input, output) {
   output$dataTable <- renderDataTable({
     data()
   })
+
   #image
   output$image <- renderImage({
     #fileを指定する
     outfile <- './sample.jpg'
     list(src = outfile)
   }, deleteFile = FALSE)
+
+  #text
+  output$text <- renderPrint(
+    "text test >>%% \n
+    bbbb"
+  )
   
   #verbatemText
   output$vtext <- renderText({
@@ -49,12 +50,12 @@ shinyServer(function(input, output) {
       textInput("label", "Label")
     )
   })
-    
+  
   #ui output
   output$ui <- renderUI({
-      tagList(
-        sliderInput("n", "N", 1, 1000, 500),
-        textInput("label", "Label")
-      )
+    tagList(
+      sliderInput("n", "N", 1, 1000, 500),
+      textInput("label", "Label")
+    )
   })
 })
