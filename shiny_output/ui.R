@@ -1,0 +1,46 @@
+#ui.R
+library(shiny)
+# Define UI for application that draws a histogram
+shinyUI(
+  navbarPage("output サンプル集",
+             tabPanel("plot",
+               mainPanel(
+                 plotOutput("distPlot")
+               )
+             ),
+  tabPanel("text",
+           mainPanel(
+             textOutput("text")
+           )
+  ),
+  tabPanel("table",
+         mainPanel(
+           tableOutput("table")
+         )
+  ),
+  tabPanel("datatable",
+           mainPanel(
+             dataTableOutput("dataTable")
+           )
+  ),
+  tabPanel("image",
+           mainPanel(
+             imageOutput("image")
+           )
+  ),
+  tabPanel("verbatimTextOutput",
+           mainPanel(
+             verbatimTextOutput("vtext")
+           )
+  ),
+  tabPanel("html",
+           mainPanel(
+             htmlOutput("html")
+           )
+  ),
+  tabPanel("ui",
+           mainPanel(
+             uiOutput("ui")
+           )
+  )
+))
