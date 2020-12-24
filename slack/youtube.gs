@@ -5,6 +5,7 @@ var HEADER_ROW = 1
 var VIDEO_NAME_COLUMN = 1
 var VIDEO_ID_COLUMN = 2
 var SLACK_URL = "https://hooks.slack.com/services/XXXXXXXXXXXXXXXXXXXXXX"
+var CHANNEL_NAME = "#test"
 
 function updateSheets(){
   var today = new Date();
@@ -79,7 +80,7 @@ function postSlack() {
 
   var payload = {
     "text" : slack_text + "\n",
-    "channel" : "#test",
+    "channel" : CHANNEL_NAME,
     "username" : "GASBot",
     "icon_emoji" : ":tada:"
   }
@@ -88,8 +89,7 @@ function postSlack() {
     "method" : "POST",
     "payload" : JSON.stringify(payload)
   }
-  var url = SLACK_URL
-  var response = UrlFetchApp.fetch(url, options);
+  var response = UrlFetchApp.fetch(SLACK_URL, options);
   var content = response.getContentText("UTF-8");
 }
 
