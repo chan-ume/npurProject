@@ -4,6 +4,7 @@ var EACH_DAY_COUNT_SHEET_NEME = "日ごとの視聴回数"
 var HEADER_ROW = 1
 var VIDEO_NAME_COLUMN = 1
 var VIDEO_ID_COLUMN = 2
+var SLACK_URL = "https://hooks.slack.com/services/XXXXXXXXXXXXXXXXXXXXXX"
 
 function updateSheets(){
   var today = new Date();
@@ -87,7 +88,7 @@ function postSlack() {
     "method" : "POST",
     "payload" : JSON.stringify(payload)
   }
-  var url = "https://hooks.slack.com/XXXXXXXXXXXXXXXXXXXX"   // Incoming Webhooks用URL
+  var url = SLACK_URL
   var response = UrlFetchApp.fetch(url, options);
   var content = response.getContentText("UTF-8");
 }
